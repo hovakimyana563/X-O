@@ -20,24 +20,18 @@ export default class Game extends Component {
     }
   }
 
-  componentDidMount() { 
+  componentDidMount() {
     this.timeout = setTimeout(() => {
       this.setState({ rot: 360, scl: 1 })
     }, 1000);
   }
 
   program = (event) => {
-    const data = event.target.getAttribute("data"); 
+    const data = event.target.getAttribute("data");
 
     if (this.state.block[data] === null) {
       this.setState({ count: this.state.count + 1 });
-      const newBlock = [...this.state.block];
-
-      newBlock[data] = (this.state.count % 2 === 0) ? "X" : "0";
-
-      this.setState({
-        block: newBlock
-      });
+      this.state.block[data] = (this.state.count % 2 === 0) ? "X" : "0";
 
       if (this.state.count === 8) {
         setTimeout(() => {
