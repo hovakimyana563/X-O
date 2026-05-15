@@ -29,30 +29,39 @@ export default class Game extends Component {
   program = (event) => {
     const data = event.target.getAttribute("data");
 
-    if (this.state.block[data] === null) {
-      this.setState({ count: this.state.count + 1 });
-      this.state.block[data] = (this.state.count % 2 === 0) ? "X" : "0";
-
-      if (this.state.count === 8) {
-        setTimeout(() => {
-          this.setState({ block: new Array(9).fill(null), count: 0 });
-        }, 500);
-      }
-
-      if (this.state.block[data] === "X") {
-        event.target.children[0].setAttribute("style", this.state.x_sty);
-      }
-
-      else {
-        event.target.children[0].setAttribute("style", this.state.o_sty);
-      }
-
-    }
-    else {
-      // alert("Արդեն Դատարկ Չէ");
+    if (this.state.block[data] !== null) {
+      return;
     }
 
-    this.program_winner();
+    const newBlock = [...this.state.block];
+    const symbol = this.state.count % 2 === 0 ? "X" : "0";
+
+    newBlock[data] = symbol;
+
+    this.setState(
+      {
+        block: newBlock,
+        count: this.state.count + 1
+      },
+      () => {
+        this.program_winner(symbol);
+      }
+    );
+
+    if (symbol === "X") {
+      event.target.children[0].setAttribute("style", this.state.x_sty);
+    } else {
+      event.target.children[0].setAttribute("style", this.state.o_sty);
+    }
+
+    if (this.state.count === 8) {
+      setTimeout(() => {
+        this.setState({
+          block: new Array(9).fill(null),
+          count: 0
+        });
+      }, 500);
+    }
   }
 
 
@@ -67,8 +76,7 @@ export default class Game extends Component {
     [2, 4, 6]
   ];
 
-  program_winner = () => {
-    const winner = (this.state.count % 2 === 0) ? "X" : "0";
+  program_winner = (winner) => {
     const block = this.state.block;
 
     for (let i = 0; i < this.winner_list.length; i++) {
